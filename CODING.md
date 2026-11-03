@@ -1,0 +1,24 @@
+# Coding mac-videos
+
+Read AGENTS.md and README.md. This repo builds entirely on this MacBook, not the Mac Studio.
+
+## Build
+
+```sh
+xcodebuild -project MacVideos.xcodeproj -scheme MacVideos -configuration Debug -derivedDataPath .build build
+open .build/Build/Products/Debug/mac-videos.app
+```
+
+Xcode 27+, macOS 27+, Swift 6; ad hoc code signing, no developer account needed. The new local bundle identifier is `io.golfergeek.mac-videos`; it must stay stable for preferences and permission identity. App targets link a small MacVideosCore framework. Tests link only core and run without launching the app or asking for media permissions. The checked-in project has no external package dependencies. XcodeGen is only needed for project structure edits: update project.yml and run `xcodegen generate`.
+
+## Required checks
+
+Run `./scripts/check.sh` (build + hostless tests). `MAC_VIDEOS_BUILD_DIR=/absolute/path` overrides `.build`. Check logs for BUILD SUCCEEDED and TEST SUCCEEDED. Xcode can emit a harmless AppIntents metadata warning because the app does not use AppIntents. No CI workflows are expected.
+
+For UI/capture edits follow README's permission-enabled smoke test. Compile/tests alone cannot prove screen capture, sound or camera compositing. Do not grant macOS privacy permissions silently or report an MP4 as tested when no recording was made.
+
+## Boundaries
+
+Settings and pure output/device logic live in MacVideosCore. The MainActor RecorderModel owns one SCStream/SCRecordingOutput per run and waits for finalization; CameraSession owns a serial queue for AVCaptureSession. CameraBubble owns the AppKit panel. StopShortcut owns the registered Carbon hotkey. SwiftUI windows/menu are in MacVideosApp.swift.
+
+No network upload implementation in v1. The YouTube plan is documentation only. No keys, tokens, personal recordings, production changes or GitHub Actions. Use worktrees, stage explicit paths, and leave the shared checkout on its current branch. See workspace guardrails for review/merge gates.

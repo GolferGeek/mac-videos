@@ -1,0 +1,60 @@
+name: MacVideos
+options:
+  deploymentTarget:
+    macOS: '27.0'
+settings:
+  base:
+    SWIFT_VERSION: '6.0'
+    CODE_SIGN_IDENTITY: '-'
+    CODE_SIGN_STYLE: Manual
+    MACOSX_DEPLOYMENT_TARGET: '27.0'
+    ENABLE_HARDENED_RUNTIME: NO
+    SWIFT_STRICT_CONCURRENCY: complete
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  MacVideosCore:
+    type: framework
+    platform: macOS
+    sources: Sources/MacVideosCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos.core
+  MacVideos:
+    type: application
+    platform: macOS
+    sources: Sources/MacVideos
+    dependencies:
+      - target: MacVideosCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos
+        PRODUCT_NAME: mac-videos
+        GENERATE_INFOPLIST_FILE: NO
+    info:
+      path: Sources/MacVideos/Info.plist
+      properties:
+        CFBundleDisplayName: mac-videos
+        NSCameraUsageDescription: Show your selected camera in the draggable recording bubble.
+        NSMicrophoneUsageDescription: Record your selected microphone with your screen walkthrough.
+        NSScreenCaptureUsageDescription: Record your selected display and camera bubble to a local video file.
+        NSHighResolutionCapable: true
+        NSPrincipalClass: NSApplication
+        NSCameraUseExternalDeviceType: true
+        NSCameraUseContinuityCameraDeviceType: true
+  MacVideosTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: Tests
+    dependencies:
+      - target: MacVideosCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos.tests
+schemes:
+  MacVideos:
+    build:
+      targets:
+        MacVideos: all
+        MacVideosTests: [test]
+    test:
+      targets: [MacVideosTests]
