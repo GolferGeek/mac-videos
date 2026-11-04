@@ -37,3 +37,10 @@ Everything waiting on Matt in this project, **most important first**. Deadlines 
 - **Why it matters:** No Google project or client exists yet, so real sign-in/upload cannot be tested. Your local MP4 always stays on your Mac. Unlisted means anyone with the link can watch.
 - **Recommendation:** Use Testing mode and your own account. After the first upload, verify unlisted status in YouTube Studio, play the link with sound and try the embed. Do not send credentials or recordings in chat or put them in GitHub.
 - **Reply:** "YouTube setup and test upload worked" (or describe where you got stuck, without credentials)
+
+## 3. Check permissions and saved Google setup after the signing update
+- **Status:** Waiting
+- **What:** Open the updated /Applications/mac-videos.app. If Screen Recording still appears off, quit the app, remove mac-videos with the minus button in System Settings → Privacy & Security → Screen & System Audio Recording, add it back, then reopen. If Google setup is missing, re-enter the client ID and desktop client secret once in Settings; do not share them in chat.
+- **Why it matters:** Builds now use a stable Apple Development identity. The one-time transition from ad hoc signing can leave stale privacy entries or Keychain access rules. Automated checks cannot prove permission retention or access to your existing Google setup.
+- **Recommendation:** Confirm Settings shows setup saved, then record and play a short clip; check setup remains saved after reopening. Existing Keychain items and privacy permissions were not reset by the agent.
+- **Reply:** "Signing update: recording and saved Google setup work" (or describe the problem without credentials)

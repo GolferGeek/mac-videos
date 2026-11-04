@@ -14,7 +14,9 @@ xcodebuild -project MacVideos.xcodeproj -scheme MacVideos \
 open .build/Build/Products/Debug/mac-videos.app
 ```
 
-Alternatively, open `MacVideos.xcodeproj` in Xcode, choose the **MacVideos** scheme and **My Mac**, and click Run. Local builds use ad hoc signing and need no developer team. Keep the app at a consistent path for permissions. macOS may ask again after a rebuild because this is an unsigned-for-distribution local app. No notarization or App Store distribution is included.
+Alternatively, open `MacVideos.xcodeproj` in Xcode, choose the **MacVideos** scheme and **My Mac**, and click Run. Debug and Release builds use Matt’s existing Apple Development certificate (team `227GEZ2676`) from the login Keychain. Keep the bundle ID `io.golfergeek.mac-videos` and installed path consistent so rebuilds retain the same permission identity. The signing certificate and private key must be available locally. No notarization or App Store distribution is included.
+
+If macOS still says Screen Recording is off after an update, quit mac-videos, remove it with the minus button in **System Settings → Privacy & Security → Screen & System Audio Recording**, add `/Applications/mac-videos.app` back, and reopen the app. After the switch from ad hoc to Apple Development signing, you may need to re-enter your Google client ID (and desktop client secret if supplied) once. YouTube setup and tokens keep the stable Keychain service `io.golfergeek.mac-videos.youtube`; existing items are not automatically deleted or reset.
 
 ## Make your first recording
 
