@@ -25,7 +25,7 @@ import MacVideosCore
             ControlsView(recorder: recorder)
                 .onAppear { delegate.recorder = recorder }
         }
-        .defaultSize(width: 440, height: 560)
+        .defaultSize(width: 560, height: 720)
         .windowResizability(.contentSize)
         .commands {
             CommandGroup(replacing: .newItem) { }
@@ -71,56 +71,92 @@ private struct ControlsView: View {
                 Spacer()
             }
             GroupBox("Sources") {
-                VStack(spacing: 12) {
-                    Picker("Display", selection: $recorder.displayID) {
-                        ForEach(recorder.displays) { Text($0.name).tag($0.id) }
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
+                    settingRow("Display") {
+                        Picker("Display", selection: $recorder.displayID) {
+                            ForEach(recorder.displays) { Text($0.name).tag($0.id) }
+                        }.labelsHidden().pickerStyle(.menu).buttonSizing(.flexible)
                     }
-                    Picker("Microphone", selection: $recorder.microphoneID) {
-                        if recorder.microphones.isEmpty { Text("No microphones found").tag("") }
-                        ForEach(recorder.microphones) { Text("\($0.name) · \($0.id.suffix(6))").tag($0.id) }
+                    settingRow("Microphone") {
+                        Picker("Microphone", selection: $recorder.microphoneID) {
+                            if recorder.microphones.isEmpty { Text("No microphones found").tag("") }
+                            ForEach(recorder.microphones) { Text("\($0.name) · \($0.id.suffix(6))").tag($0.id) }
+                        }.labelsHidden().pickerStyle(.menu).buttonSizing(.flexible)
                     }
-                    Picker("Camera", selection: $recorder.cameraID) {
-                        if recorder.cameras.isEmpty { Text("No cameras found").tag("") }
-                        ForEach(recorder.cameras) { Text("\($0.name) · \($0.id.suffix(6))").tag($0.id) }
+                    settingRow("Camera") {
+                        Picker("Camera", selection: $recorder.cameraID) {
+                            if recorder.cameras.isEmpty { Text("No cameras found").tag("") }
+                            ForEach(recorder.cameras) { Text("\($0.name) · \($0.id.suffix(6))").tag($0.id) }
+                        }.labelsHidden().pickerStyle(.menu).buttonSizing(.flexible)
                     }
-                    HStack { Spacer(); Button("Refresh sources") { recorder.refreshDevices(); recorder.refreshDisplays() } }
-                }.padding(8)
+                    settingRow("") {
+                        Button("Refresh sources") { recorder.refreshDevices(); recorder.refreshDisplays() }
+                    }
+                }.padding(12)
             }.disabled(recorder.isBusy)
             GroupBox("Camera bubble") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Show camera bubble", isOn: $recorder.bubbleVisible)
-                        .disabled(recorder.isBusy && !recorder.bubble.camera.session.isRunning)
-                    Picker("Size", selection: $recorder.bubbleSize) {
-                        ForEach(BubbleSize.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }
-                    }.pickerStyle(.segmented)
-                    Text("Drag the circle anywhere on the selected display. Enable it before starting; you can hide and show it during recording.")
-                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                }.padding(8)
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
+                    settingRow("Visibility") {
+                        Toggle("Show camera bubble", isOn: $recorder.bubbleVisible)
+                            .disabled(recorder.isBusy && !recorder.bubble.camera.session.isRunning)
+                    }
+                    settingRow("Size") {
+                        Picker("Size", selection: $recorder.bubbleSize) {
+                            ForEach(BubbleSize.allCases, id: \.self) { Text($0.rawValue.capitalized).tag($0) }
+                        }.labelsHidden().pickerStyle(.segmented).buttonSizing(.flexible)
+                    }
+                    settingRow("") {
+                        Text("Drag the circle on the selected display. Turn it on before starting; hide or show it while recording.")
+                            .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                    }
+                }.padding(12)
             }
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text("Save recordings to").font(.headline)
-                    Spacer()
-                    Button("Change…") { recorder.chooseFolder() }.disabled(recorder.isBusy)
-                }
-                Text(recorder.outputFolder.path).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
+            GroupBox("Saving") {
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
+                    settingRow("Folder") {
+                        Text(recorder.outputFolder.path)
+                            .font(.callout).foregroundStyle(.secondary).textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    settingRow("") {
+                        HStack(spacing: 12) {
+                            Button("Choose folder…") { recorder.chooseFolder() }
+                            Button("Show in Finder") { recorder.revealRecording() }
+                                .disabled(recorder.lastRecording == nil)
+                        }.disabled(recorder.isBusy)
+                    }
+                    if let last = recorder.lastRecording {
+                        settingRow("Last recording") {
+                            Label {
+                                Text(last.lastPathComponent).textSelection(.enabled)
+                            } icon: {
+                                Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                            }
+                            .font(.caption).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }.padding(12)
             }
             Divider()
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(recorder.status).font(.headline).accessibilityIdentifier("recordingStatus")
-                    if let start = recorder.startedAt {
-                        Text(start, style: .timer).monospacedDigit().foregroundStyle(.red)
-                    } else { Text("3-second countdown · H.264 MP4 + microphone audio").font(.caption).foregroundStyle(.secondary) }
+            VStack(spacing: 10) {
+                Text(recorder.status).font(.headline).accessibilityIdentifier("recordingStatus")
+                if let start = recorder.startedAt {
+                    Text(start, style: .timer).monospacedDigit().foregroundStyle(.red)
+                } else {
+                    Text("3-second countdown · H.264 MP4 · Microphone audio")
+                        .font(.caption).foregroundStyle(.secondary)
                 }
-                Spacer()
                 if recorder.isBusy {
                     Button(recorder.phase == .recording ? "Stop" : "Cancel") { recorder.stop() }
-                        .disabled(!recorder.canStop).tint(.red)
+                        .buttonStyle(.borderedProminent).tint(.red).controlSize(.large)
+                        .disabled(!recorder.canStop)
                 } else {
-                    Button("Start recording") { recorder.start() }.buttonStyle(.borderedProminent)
+                    Button("Start recording") { recorder.start() }
+                        .buttonStyle(.borderedProminent).controlSize(.large)
                 }
-            }
+                Text("Stop recording: ⇧⌘S").font(.caption).foregroundStyle(.secondary)
+            }.frame(maxWidth: .infinity)
             if !recorder.shortcutAvailable {
                 Text("⇧⌘S is unavailable (another app may use it). Stop from the menu bar or controls.")
                     .font(.caption).foregroundStyle(.orange)
@@ -133,14 +169,15 @@ private struct ControlsView: View {
                     Button("Microphone") { recorder.openPrivacy("Microphone") }
                 }.font(.caption).disabled(recorder.isBusy)
             }
-            if let last = recorder.lastRecording {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
-                    Text(last.lastPathComponent).font(.caption).lineLimit(1).truncationMode(.middle)
-                    Spacer()
-                    Button("Show in Finder") { recorder.revealRecording() }.disabled(recorder.isBusy)
-                }
-            }
-        }.padding(24).frame(width: 480)
+        }.padding(24).frame(width: 560)
+    }
+
+    private func settingRow<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        GridRow {
+            Text(title)
+                .frame(width: 100, alignment: .trailing)
+                .gridColumnAlignment(.trailing)
+            content().frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
