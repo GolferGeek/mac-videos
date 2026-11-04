@@ -1,6 +1,6 @@
 # mac-videos
 
-A small native Mac app for recording project walkthroughs. Choose a display, microphone and camera, then record a full-screen H.264 MP4 with a round camera bubble you can drag. Recordings stay on your Mac.
+A small native Mac app for recording project walkthroughs. Choose a display, microphone and camera, then record a full-screen H.264 MP4 with a round camera bubble you can drag. Recordings stay on your Mac. You can optionally upload an unlisted copy to YouTube after confirming each upload.
 
 ## Build and run
 
@@ -51,6 +51,7 @@ The build, unit checks and native launch/source-picker inspection have been veri
 - `Sources/MacVideosCore/`: settings, device-selection rules, file naming and video dimensions.
 - `Tests/`: non-UI XCTest checks.
 - `MacVideos.xcodeproj`: checked-in Xcode project. `project.yml` is its XcodeGen source; only changing the project structure requires XcodeGen (`xcodegen generate`). Normal build/run needs only Xcode.
-- `docs/youtube-upload-plan.md`: future unlisted upload setup and design. **YouTube upload is not implemented in v1.** No editing, trimming or cloud storage.
+- `docs/youtube-setup.md`: one-time Google setup and upload instructions. **Move to YouTube** uploads a copy, asks for confirmation and keeps your MP4. Google client configuration and refresh tokens stay in macOS Keychain; no Google setup is bundled. Retry continues a retained resumable upload. **Unlisted: anyone with the link can watch.** No editing or trimming.
+- `docs/youtube-upload-plan.md`: original design; `docs/plans/youtube-upload.md`: implementation decisions.
 
 Built for fun and learning by GolferGeek.

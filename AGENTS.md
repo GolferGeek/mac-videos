@@ -13,5 +13,5 @@ Personal macOS 27+ app, Swift 6, SwiftUI + AppKit, ScreenCaptureKit and AVFounda
 - UI changes require a native app launch and layout inspection. Screen, camera and mic consent is a user action; report actual capture as unverified unless a permission-enabled recording has been played and inspected.
 - Keep all AVFoundation camera session mutations on its serial queue; all UI/model transitions on MainActor. Callbacks must ignore stale recording objects.
 - Exclude every app window from capture except the camera bubble. Never replace this with excluding the whole app without the bubble exception. Do not claim success until SCRecordingOutput finishes and the file has valid media tracks.
-- Keep credentials out of the repo, settings and logs. Future OAuth refresh tokens belong in Keychain. V1 makes no network calls.
+- Keep credentials out of the repo, settings and logs. OAuth refresh tokens, local client configuration and sensitive resumable-session URLs belong in Keychain. Network calls require explicit sign-in/upload actions; capture stays local.
 - Questions/actions needing Matt belong in docs/matt-queue.md, with a pointer in workspace agent-communication.md. Report tests and permission/hardware limits honestly.

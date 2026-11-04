@@ -1,0 +1,10 @@
+# YouTube upload implementation
+
+- Goal: upload a copy only after explicit confirmation, preserve the MP4, remember a verified unlisted/embeddable result, and provide a friendly setup path without Google resources.
+- Files: add core OAuth/HTTP/resumable-upload logic and mocked tests; add app Keychain, loopback browser sign-in, upload model and SwiftUI sheets; integrate beside saved files and Settings; update project.yml/generated project, README, setup guide and Matt's queue. Capture/session code stays unchanged.
+- Approach: Foundation URLSession with redirects refused, Network loopback listener bound to 127.0.0.1, CryptoKit PKCE, Security Keychain. Request youtube.upload plus email identity to label the account without broader YouTube read access. Stream bounded chunks from disk; query a retained session on retry, never silently create a second upload after an ambiguous response. Keep sensitive resume state in Keychain, links in local preferences. Configuration is entered locally and held in Keychain, never bundled. No external packages or embedded browser.
+- Alternatives: no server/service account (unnecessary), no full-file in-memory upload (recordings can be large), no channel-read scope (account email suffices for confirmation).
+- Risks: auth callbacks, token disclosure, upload URL origin validation, cancellation races, duplicate videos and changed source files. Focused security review required. Google setup and real upload/playback require Matt; no consent or Google resources will be created during development.
+- Tests: mocked HTTP exchange/refresh/revocation, invalid callbacks/state, strict URL allowlist, explicit metadata, chunk/retry/status/final validation, errors and cancellation; full local check twice on PR head; native launch and screenshots using a clearly labeled UI preview with a synthetic file (no network).
+- Size: one feature across core and app; direct implementation and reviews in Codex per handoff, no subagents.
+- Known turn-backs: no review-lessons catalog exists.

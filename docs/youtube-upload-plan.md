@@ -1,6 +1,6 @@
 # A future “Upload unlisted” button
 
-This is a plan, not a version 1 feature. Nothing signs in, uploads or creates Google resources today. Matt's local MP4 should remain intact throughout any future upload.
+Original design, now implemented by docs/plans/youtube-upload.md. See docs/youtube-setup.md for one-time setup. No Google resources or credentials are bundled. Matt's local MP4 remains intact.
 
 ## What Matt would set up
 

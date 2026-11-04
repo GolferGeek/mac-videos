@@ -5,3 +5,7 @@ xcuserdata/
 .DS_Store
 .env*
 *.mp4
+
+# Never commit downloaded desktop OAuth configuration.
+client_secret*.json
+youtube-client*.json
