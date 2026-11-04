@@ -97,6 +97,7 @@
 		E1B80AA11219ED0397B4C2BF /* MacVideosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacVideosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E77CB6E704CB12E9EB543708 /* CoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTests.swift; sourceTree = "<group>"; };
 		E9DBE8723BDC64B1DB6A505E /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		FA854F644761E5FBE86CD503 /* Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		FD3F8E91F672180E765D9A1F /* StopShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopShortcut.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +171,7 @@
 				4C5BA6E201E9CE8FA3528EDC /* MacVideos.entitlements */,
 				3D8D15D88C4AF57820735196 /* MacVideosApp.swift */,
 				2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */,
+				FA854F644761E5FBE86CD503 /* Release.entitlements */,
 				FD3F8E91F672180E765D9A1F /* StopShortcut.swift */,
 				91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */,
 				55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */,
@@ -273,7 +275,6 @@
 				TargetAttributes = {
 					2030F1AE9D1B64455878A3B7 = {
 						DevelopmentTeam = 227GEZ2676;
-						ProvisioningStyle = Manual;
 					};
 					3C9C447EC8B02CCB3B83334C = {
 						DevelopmentTeam = 227GEZ2676;
@@ -418,9 +419,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development: MATT Weber (Q95DF7CUGG)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 227GEZ2676;
-				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -433,6 +435,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MAC_VIDEOS_KEYCHAIN_CONDITION = DATA_PROTECTION_KEYCHAIN;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -469,6 +473,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "$(MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Sources/MacVideos/Info.plist;
@@ -476,7 +482,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS = "";
+				MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS = Sources/MacVideos/Release.entitlements;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.golfergeek.mac-videos";
 				PRODUCT_NAME = "mac-videos";
 				SDKROOT = macosx;
@@ -571,6 +577,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development: MATT Weber (Q95DF7CUGG)";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 227GEZ2676;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -592,6 +599,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

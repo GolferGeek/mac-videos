@@ -23,7 +23,14 @@ Everything waiting on Matt in this project, **most important first**. Deadlines 
   - **Answer** (added when Answered).
 - **grokbot** reads this file (and the same file in Matt's other projects) to answer "what are my top issues?". It lists items that are Waiting or Asked.
 
-## 1. Grant recorder permissions and try a short recording
+## 1. Authorize Developer ID signing to finish the public release
+- **Status:** Waiting
+- **What:** The Developer ID Application certificate exists and the notarization profile works, but Xcode's Developer ID export failed with `errSecInternalComponent` when codesign tried to sign the embedded framework. Unlock the login Keychain locally and authorize codesign to use the Developer ID private key if macOS asks. Never send a password to an agent. Then ask Coding Manager to resume the notarized-release branch.
+- **Why it matters:** A development archive is built, but the release cannot be signed, notarized, published or installed until this local signing operation works. No unsigned/development build should be published as the release.
+- **Recommendation:** Handle the Keychain authorization locally, then rerun the release script from the isolated branch and complete the signed data protection Keychain tests, notarization and Gatekeeper checks before merge/publication.
+- **Reply:** "Developer ID private-key access is ready; resume the notarized release"
+
+## 2. Grant recorder permissions and try a short recording
 - **Status:** Answered (2026-11-04)
 - **Answer:** "works great"
 - **What:** mac-videos builds and launches locally. Follow the README to grant Screen Recording, Camera and Microphone access, choose the USB mic and camera, and record a short clip while speaking and dragging the bubble. Stop with Shift–Command–S and play it in QuickTime. Also try the external SSD folder when available.
@@ -31,14 +38,14 @@ Everything waiting on Matt in this project, **most important first**. Deadlines 
 - **Recommendation:** Run the README's manual smoke test before using the app for a real walkthrough. The default folder is ~/Movies/mac-videos; the report gives the already-built app path too.
 - **Reply:** "mac-videos recording smoke test passed" (or describe what failed)
 
-## 2. Set up Google once for YouTube uploads
+## 3. Set up Google once for YouTube uploads
 - **Status:** Waiting
 - **What:** Follow docs/youtube-setup.md to create your own Google Cloud project, enable YouTube Data API v3, add yourself as a test user and make a Desktop app OAuth client. Paste the client ID (and desktop client secret if supplied) into mac-videos Settings. Then sign in and explicitly upload one short test recording.
 - **Why it matters:** No Google project or client exists yet, so real sign-in/upload cannot be tested. Your local MP4 always stays on your Mac. Unlisted means anyone with the link can watch.
 - **Recommendation:** Use Testing mode and your own account. After the first upload, verify unlisted status in YouTube Studio, play the link with sound and try the embed. Do not send credentials or recordings in chat or put them in GitHub.
 - **Reply:** "YouTube setup and test upload worked" (or describe where you got stuck, without credentials)
 
-## 3. Paste existing Google setup once after the Keychain fix
+## 4. Paste existing Google setup once after the Keychain fix
 - **Status:** Waiting
 - **What:** Open /Applications/mac-videos.app → Settings, paste the existing Desktop client ID and secret, and click Save setup. No new Google project is needed. Close and reopen the app and Settings to confirm the green saved summary returns without a password prompt. Use normal Google sign-in on the next upload.
 - **Why it matters:** The old items are ignored because reading them can trigger the broken login-Keychain prompts. This build uses fresh items restricted to the signed app and suppresses password dialogs. Xcode’s saved Apple account login was rejected, so the preferred data protection entitlement could not be provisioned headlessly; the tested fallback keeps credentials in Keychain.

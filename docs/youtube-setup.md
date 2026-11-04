@@ -1,6 +1,6 @@
 # Set up YouTube once
 
-After the Keychain update, open **Settings**, paste your **existing** desktop client ID and secret, then click **Save setup** once. You do not need another Google project. Old Keychain items are ignored to avoid their password prompts. On your next upload, use the normal **Sign in with Google** button again.
+When upgrading from a development build to the notarized release, open **Settings**, paste your **existing** desktop client ID and secret, then click **Save setup** once. You do not need another Google project. The release uses separate data protection Keychain storage and leaves all previous items untouched. On your next upload, use **Sign in with Google** again. New users can skip this entire guide unless they want YouTube uploads.
 
 “Move to YouTube” uploads **a copy**. Your MP4 stays on your Mac. Nothing uploads until you click **Upload copy** after signing in and reviewing the details.
 
