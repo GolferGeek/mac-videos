@@ -9,9 +9,9 @@ xcodebuild -project MacVideos.xcodeproj -scheme MacVideos -configuration Debug -
 open .build/Build/Products/Debug/mac-videos.app
 ```
 
-Xcode 27+, macOS 27+, Swift 6; manual Apple Development signing with Matt’s existing login-Keychain identity, team `227GEZ2676` (Debug and Release). The new local bundle identifier is `io.golfergeek.mac-videos`; it must stay stable for preferences and permission identity. App targets link a small MacVideosCore framework. Tests link only core and run without launching the app or asking for media permissions. The checked-in project has no external package dependencies. XcodeGen is only needed for project structure edits: update project.yml and run `xcodegen generate`.
+Xcode 27+, macOS 27+, Swift 6; Apple Development signing for Debug and automatic provisioned Release archives, exported with Developer ID (team `227GEZ2676`). The new local bundle identifier is `io.golfergeek.mac-videos`; it must stay stable for preferences and permission identity. App targets link a small MacVideosCore framework. Tests link only core and run without launching the app or asking for media permissions. The checked-in project has no external package dependencies. XcodeGen is only needed for project structure edits: update project.yml and run `xcodegen generate`.
 
-Keychain access is lazy and MainActor-serialized. The local fallback uses a fresh service, explicit signed-app-only ACL and scoped interaction suppression; never read the original legacy service. The data protection build mode and provisioning limitation are documented in docs/plans/keychain-no-prompts.md.
+Keychain access is lazy and MainActor-serialized. The local fallback uses a fresh service, explicit signed-app-only ACL and scoped interaction suppression; never read the original legacy service. Release uses provisioned data protection Keychain; Debug retains the file-Keychain fallback. See docs/releasing.md and docs/plans/keychain-no-prompts.md.
 
 ## Required checks
 

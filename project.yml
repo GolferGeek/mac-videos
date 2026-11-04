@@ -5,6 +5,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: '6.0'
+    MARKETING_VERSION: '1.0.0'
+    CURRENT_PROJECT_VERSION: 2
     CODE_SIGN_IDENTITY: 'Apple Development: MATT Weber (Q95DF7CUGG)'
     DEVELOPMENT_TEAM: 227GEZ2676
     CODE_SIGN_STYLE: Manual
@@ -14,6 +16,9 @@ settings:
     GENERATE_INFOPLIST_FILE: YES
     SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) $(MAC_VIDEOS_KEYCHAIN_CONDITION)'
   configs:
+    Release:
+      ENABLE_HARDENED_RUNTIME: YES
+      MAC_VIDEOS_KEYCHAIN_CONDITION: DATA_PROTECTION_KEYCHAIN
     Debug:
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) DEBUG $(MAC_VIDEOS_KEYCHAIN_CONDITION)'
 targets:
@@ -42,10 +47,17 @@ targets:
         MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS: ''
         PRODUCT_NAME: mac-videos
         GENERATE_INFOPLIST_FILE: NO
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Automatic
+          CODE_SIGN_IDENTITY: Apple Development
+          MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS: Sources/MacVideos/Release.entitlements
     info:
       path: Sources/MacVideos/Info.plist
       properties:
         CFBundleDisplayName: mac-videos
+        CFBundleShortVersionString: '$(MARKETING_VERSION)'
+        CFBundleVersion: '$(CURRENT_PROJECT_VERSION)'
         NSCameraUsageDescription: Show your selected camera in the draggable recording bubble.
         NSMicrophoneUsageDescription: Record your selected microphone with your screen walkthrough.
         NSScreenCaptureUsageDescription: Record your selected display and camera bubble to a local video file.

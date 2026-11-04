@@ -2,6 +2,12 @@
 
 A small native Mac app for recording project walkthroughs. Choose a display, microphone and camera, then record a full-screen H.264 MP4 with a round camera bubble you can drag. Recordings stay on your Mac. You can optionally upload an unlisted copy to YouTube after confirming each upload.
 
+## Download
+
+Download **mac-videos-1.0.0-universal.zip** from [v1.0.0 on GitHub Releases](https://github.com/GolferGeek/mac-videos/releases/tag/v1.0.0). Requires **macOS 27 or later**, on Apple silicon or Intel. Unzip, move **mac-videos.app** to **Applications**, and open it. The release process signs with Developer ID, notarizes with Apple and staples the ticket; no App Store or Xcode is needed to run the download.
+
+See the [short user guide](docs/user-guide.md) for first launch and permissions. Recording needs no Google setup. YouTube uploads are optional and each user supplies their own Google project; no shared client ID ships in the app.
+
 ## Build and run
 
 Requires **macOS 27 or later** and **Xcode 27 or later**, with Xcode's command-line tools selected. This version targets Matt's MacBook Pro (macOS 27.2). There are no third-party runtime dependencies, package downloads, Docker services or GitHub Actions.
@@ -14,9 +20,11 @@ xcodebuild -project MacVideos.xcodeproj -scheme MacVideos \
 open .build/Build/Products/Debug/mac-videos.app
 ```
 
-Alternatively, open `MacVideos.xcodeproj` in Xcode, choose the **MacVideos** scheme and **My Mac**, and click Run. Debug and Release builds use Matt’s existing Apple Development certificate (team `227GEZ2676`) from the login Keychain. Keep the bundle ID `io.golfergeek.mac-videos` and installed path consistent so rebuilds retain the same permission identity. The signing certificate and private key must be available locally. No notarization or App Store distribution is included.
+Alternatively, open `MacVideos.xcodeproj` in Xcode, choose **MacVideos** and **My Mac**, and click Run. Debug builds use the existing Apple Development certificate (team `227GEZ2676`). Release archives use automatic provisioning and are exported with Developer ID. Keep the bundle ID `io.golfergeek.mac-videos` stable. See [release instructions](docs/releasing.md) to build the public download locally.
 
-If macOS still says Screen Recording is off after an update, quit mac-videos, remove it with the minus button in **System Settings → Privacy & Security → Screen & System Audio Recording**, add `/Applications/mac-videos.app` back, and reopen the app. Open Settings and paste your existing Google client ID (and desktop client secret if supplied) once after the Keychain update. There is no need to create another Google project. The app never reads Keychain at launch or touches the old `io.golfergeek.mac-videos.youtube` login-Keychain items. This local build uses a fresh `io.golfergeek.mac-videos.youtube.signed-v2` namespace with an app-only ACL and password dialogs disabled. Locked or inaccessible storage produces an error instead. The preferred data protection mode needs a provisioning profile that the current Xcode account cannot obtain; see [Keychain build modes](docs/plans/keychain-no-prompts.md).
+Release builds use provisioned data protection Keychain storage. On upgrading from the development build, paste your **existing** Google client ID and desktop client secret into Settings once, then sign in again on your next upload. No new Google project is needed. Existing Keychain items are left untouched. Recording works without Google setup or Keychain access at launch. Debug builds retain the isolated file-Keychain fallback; see [Keychain build modes](docs/plans/keychain-no-prompts.md).
+
+If macOS still says Screen Recording is off after an update, quit mac-videos, remove it with the minus button in **System Settings → Privacy & Security → Screen & System Audio Recording**, add `/Applications/mac-videos.app` back, and reopen the app.
 
 ## Make your first recording
 

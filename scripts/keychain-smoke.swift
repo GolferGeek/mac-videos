@@ -6,6 +6,9 @@ import MacVideosCore
     @MainActor static func main() {
         let testService = "io.golfergeek.mac-videos.tests.smoke"
         do {
+            if CommandLine.arguments.contains("--require-data-protection") {
+                guard YouTubeKeychain.usesDataProtection else { throw YouTubeKeychain.failure }
+            }
             if CommandLine.arguments.contains("--write") {
                 try YouTubeKeychain.delete("fixture", service: testService)
                 try YouTubeKeychain.write("synthetic-first", account: "fixture", service: testService)
