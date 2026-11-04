@@ -47,16 +47,17 @@ struct YouTubeSetupView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Set up YouTube").font(.title2.bold())
             Text("Do this once with your own Google account. Your video stays on your Mac until you confirm an upload.")
+                .fixedSize(horizontal: false, vertical: true)
             Text("1. Create a project in Google Cloud.\n2. Enable YouTube Data API v3.\n3. Set up Google Auth Platform: External, Testing. Add yourself as a test user.\n4. Create an OAuth client: Desktop app.\n5. Paste its client ID below. If Google supplies a client secret, paste that too.")
                 .fixedSize(horizontal: false, vertical: true)
             Link("Open Google Cloud Console", destination: URL(string: "https://console.cloud.google.com/")!)
             Link("Open the step-by-step setup guide", destination: URL(string: "https://github.com/GolferGeek/mac-videos/blob/main/docs/youtube-setup.md")!)
             Text("You also need a YouTube channel. No API key, server or paid billing setup is needed for this test.")
-                .font(.callout).foregroundStyle(.secondary)
+                .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             TextField("Desktop client ID", text: $youtube.clientID).disabled(!youtube.account.isEmpty || youtube.pending != nil || youtube.working)
             SecureField("Desktop client secret (if supplied)", text: $youtube.clientSecret).disabled(!youtube.account.isEmpty || youtube.pending != nil || youtube.working)
             Text("Stored in this Mac’s Keychain. Testing sign-ins may expire after seven days. Disconnect before changing the client.")
-                .font(.caption).foregroundStyle(.secondary)
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             if !youtube.account.isEmpty { Text("Signed in: \(youtube.account)").textSelection(.enabled) }
             if let message = youtube.message { Text(message).font(.callout).fixedSize(horizontal: false, vertical: true) }
             HStack {
