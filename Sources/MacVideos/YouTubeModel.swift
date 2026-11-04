@@ -5,6 +5,7 @@ import MacVideosCore
 @MainActor final class YouTubeModel: ObservableObject {
     struct Grant: Codable { var email: String; var refreshToken: String }
     struct Pending: Codable { var account: String; var session: YouTubeUploadSession }
+    @Published private(set) var setup = YouTubeSetupState()
     @Published var clientID = ""
     @Published var clientSecret = ""
     @Published var account = ""
@@ -25,25 +26,32 @@ import MacVideosCore
     private var expires = Date.distantPast
     private var task: Task<Void, Never>?
     private let defaults: UserDefaults
-    private var client: GoogleClient { GoogleClient(id: clientID.trimmingCharacters(in: .whitespacesAndNewlines), secret: clientSecret.trimmingCharacters(in: .whitespacesAndNewlines)) }
-    var configured: Bool { client.isValid }
+    private var client: GoogleClient { setup.client ?? GoogleClient(id: clientID.trimmingCharacters(in: .whitespacesAndNewlines), secret: clientSecret.trimmingCharacters(in: .whitespacesAndNewlines)) }
+    var configured: Bool { setup.isSaved }
+    var canSaveSetup: Bool { !configured && client.isValid && !working && grant == nil && pending == nil }
+    var canChangeSetup: Bool { configured && !working && grant == nil && pending == nil }
     var preview = false
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        preview = ProcessInfo.processInfo.arguments.contains("--youtube-ui-preview") || ProcessInfo.processInfo.arguments.contains("--youtube-setup-saved-preview")
         do {
-            if let client = try YouTubeKeychain.read("client", as: GoogleClient.self) { clientID = client.id; clientSecret = client.secret }
-            grant = try YouTubeKeychain.read("grant", as: Grant.self)
-            account = grant?.email ?? ""
-            pending = try YouTubeKeychain.read("pending", as: Pending.self)
+            if !preview {
+                if let client = try YouTubeKeychain.read("client", as: GoogleClient.self) { setup = YouTubeSetupState(client: client) }
+                grant = try YouTubeKeychain.read("grant", as: Grant.self)
+                account = grant?.email ?? ""
+                pending = try YouTubeKeychain.read("pending", as: Pending.self)
+            }
         } catch { message = YouTubeKeychain.failure.localizedDescription }
         if let data = defaults.data(forKey: "youtubeLinks"), let value = try? JSONDecoder().decode([String: YouTubeVideo].self, from: data) {
             links = value.filter { YouTubeVideo.validID($0.value.id) }
         }
         recent = (defaults.stringArray(forKey: "recentRecordings") ?? []).map { URL(fileURLWithPath: $0) }
         // Explicit, offline-only layout fixture. Does not save preferences, sign in or upload.
-        if ProcessInfo.processInfo.arguments.contains("--youtube-ui-preview") {
-            preview = true
+        if preview {
+            if ProcessInfo.processInfo.arguments.contains("--youtube-setup-saved-preview") {
+                setup = YouTubeSetupState(client: GoogleClient(id: "offline-fixture.apps.googleusercontent.com"))
+            }
             recent = [URL(fileURLWithPath: "/tmp/mac-videos-layout-preview.mp4")]
         }
     }
@@ -58,10 +66,21 @@ import MacVideosCore
         sheet = configured || preview ? .confirmation : .setup
     }
     func saveConfiguration() {
-        guard !working, configured, grant == nil, pending == nil else { return }
+        guard canSaveSetup else { return }
         do {
-            try YouTubeKeychain.write(client, account: "client")
-            message = "Saved on this Mac. Return to your recording and sign in with Google."
+            let draft = client
+            try setup.save(draft) { value in
+                if !preview { try YouTubeKeychain.write(value, account: "client") }
+            }
+            clientID = ""; clientSecret = ""
+            message = nil
+        } catch { show(error) }
+    }
+    func changeSetup() {
+        guard canChangeSetup else { return }
+        do {
+            try setup.clear { if !preview { try YouTubeKeychain.delete("client") } }
+            clientID = ""; clientSecret = ""; message = nil
         } catch { show(error) }
     }
     func signIn() {
@@ -70,7 +89,6 @@ import MacVideosCore
         task = Task {
             var receivedToken: String?
             do {
-                try YouTubeKeychain.write(client, account: "client")
                 let attempt = try OAuthAttempt()
                 let loopback = GoogleLoopback()
                 var redirect = ""
