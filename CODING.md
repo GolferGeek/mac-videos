@@ -9,7 +9,7 @@ xcodebuild -project MacVideos.xcodeproj -scheme MacVideos -configuration Debug -
 open .build/Build/Products/Debug/mac-videos.app
 ```
 
-Xcode 27+, macOS 27+, Swift 6; ad hoc code signing, no developer account needed. The new local bundle identifier is `io.golfergeek.mac-videos`; it must stay stable for preferences and permission identity. App targets link a small MacVideosCore framework. Tests link only core and run without launching the app or asking for media permissions. The checked-in project has no external package dependencies. XcodeGen is only needed for project structure edits: update project.yml and run `xcodegen generate`.
+Xcode 27+, macOS 27+, Swift 6; manual Apple Development signing with Matt’s existing login-Keychain identity, team `227GEZ2676` (Debug and Release). The new local bundle identifier is `io.golfergeek.mac-videos`; it must stay stable for preferences and permission identity. App targets link a small MacVideosCore framework. Tests link only core and run without launching the app or asking for media permissions. The checked-in project has no external package dependencies. XcodeGen is only needed for project structure edits: update project.yml and run `xcodegen generate`.
 
 ## Required checks
 

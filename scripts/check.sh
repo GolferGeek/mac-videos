@@ -11,5 +11,9 @@ for camera_key in NSCameraUseExternalDeviceType NSCameraUseContinuityCameraDevic
     [[ "$(/usr/libexec/PlistBuddy -c "Print :$camera_key" "$app_plist")" == "true" ]]
 done
 codesign --verify --deep --strict "$derived/Build/Products/Debug/mac-videos.app"
-echo "App privacy metadata and local signature: PASS"
+signing_details="$(codesign -dv --verbose=4 "$derived/Build/Products/Debug/mac-videos.app" 2>&1)"
+[[ "$signing_details" == *"Identifier=io.golfergeek.mac-videos"$'\n'* ]]
+[[ "$signing_details" == *"TeamIdentifier=227GEZ2676"$'\n'* ]]
+[[ "$signing_details" == *"Authority=Apple Development: MATT Weber (Q95DF7CUGG)"$'\n'* ]]
+echo "App privacy metadata and Apple Development signature: PASS"
 xcodebuild -project MacVideos.xcodeproj -scheme MacVideos -configuration Debug -derivedDataPath "$derived" test
