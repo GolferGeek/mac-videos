@@ -16,6 +16,9 @@ targets:
     type: framework
     platform: macOS
     sources: Sources/MacVideosCore
+    dependencies:
+      - sdk: Security.framework
+      - sdk: CryptoKit.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos.core
@@ -25,6 +28,8 @@ targets:
     sources: Sources/MacVideos
     dependencies:
       - target: MacVideosCore
+      - sdk: Network.framework
+      - sdk: Security.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos

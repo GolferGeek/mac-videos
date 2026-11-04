@@ -8,15 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		0050658874532DA44EFA7B26 /* StopShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3F8E91F672180E765D9A1F /* StopShortcut.swift */; };
+		09197B31A00D08008DDE74C2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F90D154383F9E50F829E7 /* Security.framework */; };
+		28ECC62E2BCCC61B40A3C8A9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F90D154383F9E50F829E7 /* Security.framework */; };
 		3B997BE8CF9FBE25D16CD621 /* MacVideosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8D15D88C4AF57820735196 /* MacVideosApp.swift */; };
 		3D4237D20EEFD94CCD8947ED /* MacVideosCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4FF3A4B7F811EAA4FA107E60 /* YouTubeAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */; };
+		5339319DFDF785061B52BFED /* CryptoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E9DDE783C5E49D785E69E9A /* CryptoKit.framework */; };
+		73FDD3394C6CBC90B2FB77BC /* YouTubeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884EABF5D42945A1C98C223F /* YouTubeViews.swift */; };
+		74D360A02033A6203C6D20AA /* YouTubeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE54CF366AADE177B997515 /* YouTubeTests.swift */; };
 		7DCC94840899D43FD8C24B53 /* CameraBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94BEBDEEB265625B0A20D7 /* CameraBubble.swift */; };
 		85F5B078EF3145720B1FC558 /* RecorderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */; };
 		BCC2A37E695410B941C86A37 /* CoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77CB6E704CB12E9EB543708 /* CoreTests.swift */; };
+		C8129B766698714D20236E00 /* YouTube.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */; };
 		CB7673651A25F079644068D5 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE8723BDC64B1DB6A505E /* Preferences.swift */; };
 		D33B67F6F1A10523AB642407 /* MacVideosCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; };
 		DE6F04A5E965E9CE7EB9B43E /* MacVideosCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; };
 		E4AEF5501D9E35A02BE89D1C /* MacVideosCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F0B30CD70D273C6D26E92715 /* YouTubeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */; };
+		F1ED9CAB6E6A08F9FC2DA95D /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A981BAF6D5E94E84FAF71F4 /* Network.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,10 +72,18 @@
 
 /* Begin PBXFileReference section */
 		2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderModel.swift; sourceTree = "<group>"; };
+		3C5F90D154383F9E50F829E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3D8D15D88C4AF57820735196 /* MacVideosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacVideosApp.swift; sourceTree = "<group>"; };
 		5001905C05DA0BA1B58386CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeModel.swift; sourceTree = "<group>"; };
+		5A981BAF6D5E94E84FAF71F4 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		884EABF5D42945A1C98C223F /* YouTubeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeViews.swift; sourceTree = "<group>"; };
+		8BE54CF366AADE177B997515 /* YouTubeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeTests.swift; sourceTree = "<group>"; };
+		8E9DDE783C5E49D785E69E9A /* CryptoKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoKit.framework; path = System/Library/Frameworks/CryptoKit.framework; sourceTree = SDKROOT; };
+		91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeAccount.swift; sourceTree = "<group>"; };
 		BA2B498F3D85CE5B93D52488 /* MacVideos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacVideos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD94BEBDEEB265625B0A20D7 /* CameraBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBubble.swift; sourceTree = "<group>"; };
+		C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTube.swift; sourceTree = "<group>"; };
 		CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MacVideosCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B80AA11219ED0397B4C2BF /* MacVideosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacVideosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E77CB6E704CB12E9EB543708 /* CoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTests.swift; sourceTree = "<group>"; };
@@ -83,11 +100,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		442F2E0A19CBC8759433B97A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28ECC62E2BCCC61B40A3C8A9 /* Security.framework in Frameworks */,
+				5339319DFDF785061B52BFED /* CryptoKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		939800B02F6353DA83733F44 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D33B67F6F1A10523AB642407 /* MacVideosCore.framework in Frameworks */,
+				F1ED9CAB6E6A08F9FC2DA95D /* Network.framework in Frameworks */,
+				09197B31A00D08008DDE74C2 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,12 +132,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		678946B0BB10362C33A2A43E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8E9DDE783C5E49D785E69E9A /* CryptoKit.framework */,
+				5A981BAF6D5E94E84FAF71F4 /* Network.framework */,
+				3C5F90D154383F9E50F829E7 /* Security.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6E4679556A51B9C13D6CB1E7 = {
 			isa = PBXGroup;
 			children = (
 				78501146E0773EA2DA19C85E /* MacVideos */,
 				E6620A58A6B9A7690B0CAD03 /* MacVideosCore */,
 				D4384AF7F1DA35E0B36F3451 /* Tests */,
+				678946B0BB10362C33A2A43E /* Frameworks */,
 				13D7DBB143B44507781508D0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,6 +161,9 @@
 				3D8D15D88C4AF57820735196 /* MacVideosApp.swift */,
 				2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */,
 				FD3F8E91F672180E765D9A1F /* StopShortcut.swift */,
+				91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */,
+				55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */,
+				884EABF5D42945A1C98C223F /* YouTubeViews.swift */,
 			);
 			name = MacVideos;
 			path = Sources/MacVideos;
@@ -131,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				E77CB6E704CB12E9EB543708 /* CoreTests.swift */,
+				8BE54CF366AADE177B997515 /* YouTubeTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -139,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				E9DBE8723BDC64B1DB6A505E /* Preferences.swift */,
+				C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */,
 			);
 			name = MacVideosCore;
 			path = Sources/MacVideosCore;
@@ -192,6 +236,7 @@
 			buildConfigurationList = F57EC6864FDC857CB708B92B /* Build configuration list for PBXNativeTarget "MacVideosCore" */;
 			buildPhases = (
 				6B28003A6F77F83932D00AD8 /* Sources */,
+				442F2E0A19CBC8759433B97A /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -254,6 +299,9 @@
 				3B997BE8CF9FBE25D16CD621 /* MacVideosApp.swift in Sources */,
 				85F5B078EF3145720B1FC558 /* RecorderModel.swift in Sources */,
 				0050658874532DA44EFA7B26 /* StopShortcut.swift in Sources */,
+				4FF3A4B7F811EAA4FA107E60 /* YouTubeAccount.swift in Sources */,
+				F0B30CD70D273C6D26E92715 /* YouTubeModel.swift in Sources */,
+				73FDD3394C6CBC90B2FB77BC /* YouTubeViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCC2A37E695410B941C86A37 /* CoreTests.swift in Sources */,
+				74D360A02033A6203C6D20AA /* YouTubeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB7673651A25F079644068D5 /* Preferences.swift in Sources */,
+				C8129B766698714D20236E00 /* YouTube.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

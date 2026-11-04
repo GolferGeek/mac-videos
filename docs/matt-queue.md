@@ -24,8 +24,16 @@ Everything waiting on Matt in this project, **most important first**. Deadlines 
 - **grokbot** reads this file (and the same file in Matt's other projects) to answer "what are my top issues?". It lists items that are Waiting or Asked.
 
 ## 1. Grant recorder permissions and try a short recording
-- **Status:** Waiting
+- **Status:** Answered (2026-11-04)
+- **Answer:** "works great"
 - **What:** mac-videos builds and launches locally. Follow the README to grant Screen Recording, Camera and Microphone access, choose the USB mic and camera, and record a short clip while speaking and dragging the bubble. Stop with Shift–Command–S and play it in QuickTime. Also try the external SSD folder when available.
 - **Why it matters:** Build/unit tests and source-picker inspection cannot prove real microphone sound, camera compositing, control-window exclusion, global stopping or SSD writes without interactive consent and connected hardware.
 - **Recommendation:** Run the README's manual smoke test before using the app for a real walkthrough. The default folder is ~/Movies/mac-videos; the report gives the already-built app path too.
 - **Reply:** "mac-videos recording smoke test passed" (or describe what failed)
+
+## 2. Set up Google once for YouTube uploads
+- **Status:** Waiting
+- **What:** Follow docs/youtube-setup.md to create your own Google Cloud project, enable YouTube Data API v3, add yourself as a test user and make a Desktop app OAuth client. Paste the client ID (and desktop client secret if supplied) into mac-videos Settings. Then sign in and explicitly upload one short test recording.
+- **Why it matters:** No Google project or client exists yet, so real sign-in/upload cannot be tested. Your local MP4 always stays on your Mac. Unlisted means anyone with the link can watch.
+- **Recommendation:** Use Testing mode and your own account. After the first upload, verify unlisted status in YouTube Studio, play the link with sound and try the embed. Do not send credentials or recordings in chat or put them in GitHub.
+- **Reply:** "YouTube setup and test upload worked" (or describe where you got stuck, without credentials)
