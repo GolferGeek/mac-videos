@@ -161,6 +161,7 @@ public struct GoogleTokens: Codable, Sendable {
 
 public struct YouTubeVideo: Codable, Sendable, Equatable {
     public let id: String
+    public var title: String? = nil
     public var watchURL: URL { URL(string: "https://www.youtube.com/watch?v=\(id)")! }
     public var embedCode: String { "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/\(id)\" title=\"YouTube video player\" frameborder=\"0\" allowfullscreen></iframe>" }
     public static func validID(_ id: String) -> Bool {
@@ -258,14 +259,15 @@ public struct YouTubeUploadSession: Codable, Sendable {
     private static func video(_ result: HTTPResult) throws -> YouTubeVideo {
         struct Response: Decodable {
             struct Status: Decodable { let privacyStatus: String; let embeddable: Bool; let uploadStatus: String? }
-            let id: String; let status: Status
+            struct Snippet: Decodable { let title: String? }
+            let id: String; let status: Status; let snippet: Snippet?
         }
         guard let video = try? JSONDecoder().decode(Response.self, from: result.data), YouTubeVideo.validID(video.id) else { throw YouTubeError.unsafeResponse }
         guard video.status.privacyStatus == "unlisted", video.status.embeddable,
               video.status.uploadStatus != "rejected", video.status.uploadStatus != "failed", video.status.uploadStatus != "deleted" else {
             throw YouTubeError.message("YouTube received the video but did not confirm unlisted and embeddable status. Check YouTube Studio before sharing; Retry checks this upload again.")
         }
-        return YouTubeVideo(id: video.id)
+        return YouTubeVideo(id: video.id, title: video.snippet?.title)
     }
     private static func check(_ result: HTTPResult) throws {
         if result.status == 401 { throw YouTubeError.expired }
