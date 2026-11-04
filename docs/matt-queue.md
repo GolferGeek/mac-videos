@@ -38,9 +38,9 @@ Everything waiting on Matt in this project, **most important first**. Deadlines 
 - **Recommendation:** Use Testing mode and your own account. After the first upload, verify unlisted status in YouTube Studio, play the link with sound and try the embed. Do not send credentials or recordings in chat or put them in GitHub.
 - **Reply:** "YouTube setup and test upload worked" (or describe where you got stuck, without credentials)
 
-## 3. Check permissions and saved Google setup after the signing update
+## 3. Paste existing Google setup once after the Keychain fix
 - **Status:** Waiting
-- **What:** Open the updated /Applications/mac-videos.app. If Screen Recording still appears off, quit the app, remove mac-videos with the minus button in System Settings → Privacy & Security → Screen & System Audio Recording, add it back, then reopen. If Google setup is missing, re-enter the client ID and desktop client secret once in Settings; do not share them in chat.
-- **Why it matters:** Builds now use a stable Apple Development identity. The one-time transition from ad hoc signing can leave stale privacy entries or Keychain access rules. Automated checks cannot prove permission retention or access to your existing Google setup.
-- **Recommendation:** Confirm Settings shows setup saved, then record and play a short clip; check setup remains saved after reopening. Existing Keychain items and privacy permissions were not reset by the agent.
-- **Reply:** "Signing update: recording and saved Google setup work" (or describe the problem without credentials)
+- **What:** Open /Applications/mac-videos.app → Settings, paste the existing Desktop client ID and secret, and click Save setup. No new Google project is needed. Close and reopen the app and Settings to confirm the green saved summary returns without a password prompt. Use normal Google sign-in on the next upload.
+- **Why it matters:** The old items are ignored because reading them can trigger the broken login-Keychain prompts. This build uses fresh items restricted to the signed app and suppresses password dialogs. Xcode’s saved Apple account login was rejected, so the preferred data protection entitlement could not be provisioned headlessly; the tested fallback keeps credentials in Keychain.
+- **Recommendation:** Paste the existing setup once; do not share it in chat. If an access error appears, report its text without credentials. Existing privacy permissions were not reset.
+- **Reply:** "Google setup stays saved without Keychain prompts" (or describe the error without credentials)

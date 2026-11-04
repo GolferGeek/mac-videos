@@ -63,7 +63,7 @@ struct YouTubeSetupView: View {
                         .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 }
             } else {
-                Text("Do this once with your own Google account. Your video stays on your Mac until you confirm an upload.")
+                Text("No saved setup was found in the protected Keychain. If you set up an earlier version, paste your existing client ID and secret again once. You do not need a new Google project.")
                     .fixedSize(horizontal: false, vertical: true)
                 Text("1. Create a project in Google Cloud.\n2. Enable YouTube Data API v3.\n3. Set up Google Auth Platform: External, Testing. Add yourself as a test user.\n4. Create an OAuth client: Desktop app.\n5. Paste its client ID below. If Google supplies a client secret, paste that too.")
                     .fixedSize(horizontal: false, vertical: true)
@@ -90,6 +90,7 @@ struct YouTubeSetupView: View {
             }
         }.textFieldStyle(.roundedBorder).padding(24).frame(width: 540)
         .disabled(youtube.working)
+        .onAppear { youtube.loadCredentials() }
         .alert("Change YouTube setup?", isPresented: $confirmingChange) {
             Button("Cancel", role: .cancel) { }
             Button("Clear setup", role: .destructive) { youtube.changeSetup() }

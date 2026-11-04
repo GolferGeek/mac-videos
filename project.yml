@@ -12,6 +12,10 @@ settings:
     ENABLE_HARDENED_RUNTIME: NO
     SWIFT_STRICT_CONCURRENCY: complete
     GENERATE_INFOPLIST_FILE: YES
+    SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) $(MAC_VIDEOS_KEYCHAIN_CONDITION)'
+  configs:
+    Debug:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: '$(inherited) DEBUG $(MAC_VIDEOS_KEYCHAIN_CONDITION)'
 targets:
   MacVideosCore:
     type: framework
@@ -34,6 +38,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: io.golfergeek.mac-videos
+        CODE_SIGN_ENTITLEMENTS: '$(MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS)'
+        MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS: ''
         PRODUCT_NAME: mac-videos
         GENERATE_INFOPLIST_FILE: NO
     info:
@@ -50,7 +56,10 @@ targets:
   MacVideosTests:
     type: bundle.unit-test
     platform: macOS
-    sources: Tests
+    sources:
+      - Tests
+      - Sources/MacVideos/YouTubeModel.swift
+      - Sources/MacVideos/YouTubeAccount.swift
     dependencies:
       - target: MacVideosCore
     settings:
