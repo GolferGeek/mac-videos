@@ -53,6 +53,27 @@ public struct GoogleClient: Codable, Sendable {
     }
 }
 
+// Saved state changes only after the caller's store operation succeeds.
+public struct YouTubeSetupState: Sendable {
+    public private(set) var client: GoogleClient?
+    public init(client: GoogleClient? = nil) { self.client = client }
+    public var isSaved: Bool { client?.isValid == true }
+    public var maskedClientID: String {
+        guard let id = client?.id, !id.isEmpty else { return "" }
+        // Never reveal an entire short identifier or its identifying prefix.
+        return "••••••••" + (id.count > 8 ? String(id.suffix(8)) : "")
+    }
+    public mutating func save(_ draft: GoogleClient, persist: (GoogleClient) throws -> Void) throws {
+        guard !isSaved, draft.isValid else { return }
+        try persist(draft)
+        client = draft
+    }
+    public mutating func clear(remove: () throws -> Void) throws {
+        try remove()
+        client = nil
+    }
+}
+
 public struct OAuthAttempt: Sendable {
     public let state: String
     public let verifier: String

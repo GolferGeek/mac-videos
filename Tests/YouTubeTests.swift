@@ -27,6 +27,39 @@ private actor MockGoogle: YouTubeTransport {
         let (size, date) = try YouTubeUploader.fingerprint(file)
         return .init(url: sessionURL, file: file, size: size, modified: date)
     }
+    func testSetupSaveReopenAndClearUseMockStore() throws {
+        let draft = GoogleClient(id: "offline-fixture.apps.googleusercontent.com", secret: "fixture-only")
+        var stored: GoogleClient?
+        var writes = 0
+        var setup = YouTubeSetupState()
+        XCTAssertFalse(setup.isSaved)
+        try setup.save(GoogleClient(id: "   ")) { _ in XCTFail("Blank draft must not persist") }
+        XCTAssertFalse(setup.isSaved)
+        try setup.save(draft) { stored = $0; writes += 1 }
+        XCTAssertTrue(setup.isSaved)
+        try setup.save(draft) { _ in XCTFail("Repeated save must not overwrite") }
+        XCTAssertEqual(writes, 1)
+        var reopened = YouTubeSetupState(client: stored)
+        XCTAssertTrue(reopened.isSaved)
+        XCTAssertFalse(reopened.maskedClientID.contains("offline-fixture"))
+        XCTAssertFalse(reopened.maskedClientID.contains(draft.id))
+        XCTAssertFalse(reopened.maskedClientID.contains(draft.secret))
+        try reopened.clear { stored = nil }
+        XCTAssertFalse(reopened.isSaved)
+        XCTAssertNil(stored)
+        XCTAssertEqual(reopened.maskedClientID, "")
+    }
+    func testSetupPersistenceFailuresKeepPreviousState() throws {
+        let draft = GoogleClient(id: "offline-fixture.apps.googleusercontent.com")
+        var setup = YouTubeSetupState()
+        XCTAssertThrowsError(try setup.save(draft) { _ in throw YouTubeError.unsafeResponse })
+        XCTAssertFalse(setup.isSaved)
+        try setup.save(draft) { _ in }
+        XCTAssertThrowsError(try setup.clear { throw YouTubeError.unsafeResponse })
+        XCTAssertTrue(setup.isSaved)
+        XCTAssertEqual(setup.client?.id, draft.id)
+        XCTAssertEqual(YouTubeSetupState(client: GoogleClient(id: "short")).maskedClientID, "••••••••")
+    }
     func testPKCEKnownRFC7636VectorAndAuthorizationScope() throws {
         let attempt = OAuthAttempt(state: "expected", verifier: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk")
         XCTAssertEqual(attempt.challenge, "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM")
