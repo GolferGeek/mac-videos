@@ -25,24 +25,28 @@ import MacVideosCore
     private var accessToken: String?
     private var expires = Date.distantPast
     private var task: Task<Void, Never>?
+    struct Credentials {
+        var client: GoogleClient?
+        var grant: Grant?
+        var pending: Pending?
+    }
+    private let credentialReader: @MainActor () throws -> Credentials
     private let defaults: UserDefaults
     private var client: GoogleClient { setup.client ?? GoogleClient(id: clientID.trimmingCharacters(in: .whitespacesAndNewlines), secret: clientSecret.trimmingCharacters(in: .whitespacesAndNewlines)) }
     var configured: Bool { setup.isSaved }
-    var canSaveSetup: Bool { !configured && client.isValid && !working && grant == nil && pending == nil }
-    var canChangeSetup: Bool { configured && !working && grant == nil && pending == nil }
+    var canSaveSetup: Bool { !configured && client.isValid && !working && (credentialsLoaded || preview) && grant == nil && pending == nil }
+    var canChangeSetup: Bool { configured && !working && (credentialsLoaded || preview) && grant == nil && pending == nil }
     var preview = false
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard,
+         credentialReader: @escaping @MainActor () throws -> Credentials = {
+             Credentials(client: try YouTubeKeychain.read("client", as: GoogleClient.self),
+                         grant: try YouTubeKeychain.read("grant", as: Grant.self),
+                         pending: try YouTubeKeychain.read("pending", as: Pending.self))
+         }) {
         self.defaults = defaults
+        self.credentialReader = credentialReader
         preview = ProcessInfo.processInfo.arguments.contains("--youtube-ui-preview") || ProcessInfo.processInfo.arguments.contains("--youtube-setup-saved-preview")
-        do {
-            if !preview {
-                if let client = try YouTubeKeychain.read("client", as: GoogleClient.self) { setup = YouTubeSetupState(client: client) }
-                grant = try YouTubeKeychain.read("grant", as: Grant.self)
-                account = grant?.email ?? ""
-                pending = try YouTubeKeychain.read("pending", as: Pending.self)
-            }
-        } catch { message = YouTubeKeychain.failure.localizedDescription }
         if let data = defaults.data(forKey: "youtubeLinks"), let value = try? JSONDecoder().decode([String: YouTubeVideo].self, from: data) {
             links = value.filter { YouTubeVideo.validID($0.value.id) }
         }
@@ -55,6 +59,18 @@ import MacVideosCore
             recent = [URL(fileURLWithPath: "/tmp/mac-videos-layout-preview.mp4")]
         }
     }
+    private var credentialsLoaded = false
+    // Only explicit Settings/upload entry calls this. No Keychain access in init.
+    func loadCredentials() {
+        guard !preview, !credentialsLoaded, !working else { return }
+        do {
+            let saved = try credentialReader()
+            setup = YouTubeSetupState(client: saved.client)
+            grant = saved.grant; account = saved.grant?.email ?? ""; pending = saved.pending
+            credentialsLoaded = true
+            message = nil
+        } catch { message = YouTubeKeychain.failure.localizedDescription }
+    }
     func remember(_ url: URL) {
         guard !preview else { return }
         recent.removeAll { $0 == url }; recent.insert(url, at: 0); recent = Array(recent.prefix(8))
@@ -62,7 +78,9 @@ import MacVideosCore
     }
     func open(_ url: URL) {
         if let video = links[url.path] { NSWorkspace.shared.open(video.watchURL); return }
-        selected = url; video = nil; message = nil
+        message = nil
+        loadCredentials()
+        selected = url; video = nil
         sheet = configured || preview ? .confirmation : .setup
     }
     func saveConfiguration() {
@@ -173,7 +191,7 @@ import MacVideosCore
                 if let saved { try await api.revoke(saved) }
                 message = "Disconnected YouTube. Local videos and saved links stay on this Mac."
             } catch {
-                message = grant == nil ? "Disconnected locally. If Google revocation failed, remove mac-videos from your Google Account permissions. If a resume item could not be removed, unlock Keychain and disconnect again." : YouTubeKeychain.failure.localizedDescription
+                message = grant == nil ? "Disconnected locally. If Google revocation failed, remove mac-videos from your Google Account permissions. If a resume item could not be removed, unlock your Mac and disconnect again." : YouTubeKeychain.failure.localizedDescription
             }
             working = false; task = nil
         }
@@ -184,7 +202,7 @@ import MacVideosCore
         } else if error is URLError {
             message = "The network connection failed. Reconnect and Retry to continue the same upload. Your local video is safe."
         } else if let error = error as? YouTubeError { message = error.localizedDescription }
-        else { message = "Could not complete this step. Check the local file and unlock your Keychain, then Retry. Your local video is safe." }
+        else { message = "Could not complete this step. Check the local file and unlock your Mac, then Retry. Your local video is safe." }
     }
     func copy(_ value: String) { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(value, forType: .string) }
 }

@@ -3,38 +3,6 @@ import Network
 import Security
 import MacVideosCore
 
-// Refresh token, client configuration and resumable URL never enter preferences or logs.
-enum YouTubeKeychain {
-    private static let service = "io.golfergeek.mac-videos.youtube"
-    static func read<T: Decodable>(_ account: String, as type: T.Type) throws -> T? {
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                                    kSecAttrAccount as String: account, kSecReturnData as String: true,
-                                    kSecMatchLimit as String: kSecMatchLimitOne]
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-        if status == errSecItemNotFound { return nil }
-        guard status == errSecSuccess, let data = item as? Data else { throw failure }
-        guard let value = try? JSONDecoder().decode(type, from: data) else { throw failure }
-        return value
-    }
-    static func write<T: Encodable>(_ value: T, account: String) throws {
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service, kSecAttrAccount as String: account]
-        let attributes: [String: Any] = [kSecValueData as String: try JSONEncoder().encode(value),
-                                        kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly]
-        var status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
-        if status == errSecItemNotFound {
-            status = SecItemAdd(query.merging(attributes, uniquingKeysWith: { _, value in value }) as CFDictionary, nil)
-        }
-        guard status == errSecSuccess else { throw failure }
-    }
-    static func delete(_ account: String) throws {
-        let status = SecItemDelete([kSecClass as String: kSecClassGenericPassword,
-                                   kSecAttrService as String: service, kSecAttrAccount as String: account] as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else { throw failure }
-    }
-    static var failure: YouTubeError { .message("mac-videos could not access its YouTube Keychain item. Unlock your login Keychain and try again.") }
-}
-
 @MainActor final class GoogleLoopback {
     private var listener: NWListener?
     private var connections: [NWConnection] = []

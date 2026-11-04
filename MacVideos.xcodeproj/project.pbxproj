@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		0050658874532DA44EFA7B26 /* StopShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3F8E91F672180E765D9A1F /* StopShortcut.swift */; };
 		09197B31A00D08008DDE74C2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F90D154383F9E50F829E7 /* Security.framework */; };
+		185BE179297E2EBD2EC3F016 /* YouTubeAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */; };
 		28ECC62E2BCCC61B40A3C8A9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5F90D154383F9E50F829E7 /* Security.framework */; };
+		32095256340CFCE09EBE04B9 /* YouTubeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */; };
 		3B997BE8CF9FBE25D16CD621 /* MacVideosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8D15D88C4AF57820735196 /* MacVideosApp.swift */; };
 		3D4237D20EEFD94CCD8947ED /* MacVideosCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4FF3A4B7F811EAA4FA107E60 /* YouTubeAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */; };
@@ -18,7 +20,10 @@
 		74D360A02033A6203C6D20AA /* YouTubeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE54CF366AADE177B997515 /* YouTubeTests.swift */; };
 		7DCC94840899D43FD8C24B53 /* CameraBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD94BEBDEEB265625B0A20D7 /* CameraBubble.swift */; };
 		85F5B078EF3145720B1FC558 /* RecorderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */; };
+		9E9775405B87B097DF009903 /* YouTubeCredentialLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAD46C339D2990E2BE42C46 /* YouTubeCredentialLoadingTests.swift */; };
+		A9E940C7B4124A3BE75D9CFF /* KeychainPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8CFB66126E5EE377C2ED96 /* KeychainPolicyTests.swift */; };
 		BCC2A37E695410B941C86A37 /* CoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77CB6E704CB12E9EB543708 /* CoreTests.swift */; };
+		BD34B174B220CC6C6E86D3B5 /* YouTubeKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9951BF732F672C04D90A2A42 /* YouTubeKeychain.swift */; };
 		C8129B766698714D20236E00 /* YouTube.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */; };
 		CB7673651A25F079644068D5 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE8723BDC64B1DB6A505E /* Preferences.swift */; };
 		D33B67F6F1A10523AB642407 /* MacVideosCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB7C27BBE75DF35CA4957EE8 /* MacVideosCore.framework */; };
@@ -71,9 +76,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1EAD46C339D2990E2BE42C46 /* YouTubeCredentialLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeCredentialLoadingTests.swift; sourceTree = "<group>"; };
 		2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderModel.swift; sourceTree = "<group>"; };
 		3C5F90D154383F9E50F829E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3D8CFB66126E5EE377C2ED96 /* KeychainPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainPolicyTests.swift; sourceTree = "<group>"; };
 		3D8D15D88C4AF57820735196 /* MacVideosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacVideosApp.swift; sourceTree = "<group>"; };
+		4C5BA6E201E9CE8FA3528EDC /* MacVideos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacVideos.entitlements; sourceTree = "<group>"; };
 		5001905C05DA0BA1B58386CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		55943E4C0C7397A3FF0D099B /* YouTubeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeModel.swift; sourceTree = "<group>"; };
 		5A981BAF6D5E94E84FAF71F4 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
@@ -81,6 +89,7 @@
 		8BE54CF366AADE177B997515 /* YouTubeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeTests.swift; sourceTree = "<group>"; };
 		8E9DDE783C5E49D785E69E9A /* CryptoKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoKit.framework; path = System/Library/Frameworks/CryptoKit.framework; sourceTree = SDKROOT; };
 		91CC23D2389F671FF53F0212 /* YouTubeAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeAccount.swift; sourceTree = "<group>"; };
+		9951BF732F672C04D90A2A42 /* YouTubeKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeKeychain.swift; sourceTree = "<group>"; };
 		BA2B498F3D85CE5B93D52488 /* MacVideos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacVideos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD94BEBDEEB265625B0A20D7 /* CameraBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBubble.swift; sourceTree = "<group>"; };
 		C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTube.swift; sourceTree = "<group>"; };
@@ -158,6 +167,7 @@
 			children = (
 				BD94BEBDEEB265625B0A20D7 /* CameraBubble.swift */,
 				5001905C05DA0BA1B58386CD /* Info.plist */,
+				4C5BA6E201E9CE8FA3528EDC /* MacVideos.entitlements */,
 				3D8D15D88C4AF57820735196 /* MacVideosApp.swift */,
 				2FB858387F3EA0CCD2EF0FA0 /* RecorderModel.swift */,
 				FD3F8E91F672180E765D9A1F /* StopShortcut.swift */,
@@ -173,6 +183,8 @@
 			isa = PBXGroup;
 			children = (
 				E77CB6E704CB12E9EB543708 /* CoreTests.swift */,
+				3D8CFB66126E5EE377C2ED96 /* KeychainPolicyTests.swift */,
+				1EAD46C339D2990E2BE42C46 /* YouTubeCredentialLoadingTests.swift */,
 				8BE54CF366AADE177B997515 /* YouTubeTests.swift */,
 			);
 			path = Tests;
@@ -183,6 +195,7 @@
 			children = (
 				E9DBE8723BDC64B1DB6A505E /* Preferences.swift */,
 				C9FFDD6BD180D0E2669CD8AD /* YouTube.swift */,
+				9951BF732F672C04D90A2A42 /* YouTubeKeychain.swift */,
 			);
 			name = MacVideosCore;
 			path = Sources/MacVideosCore;
@@ -313,6 +326,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCC2A37E695410B941C86A37 /* CoreTests.swift in Sources */,
+				A9E940C7B4124A3BE75D9CFF /* KeychainPolicyTests.swift in Sources */,
+				185BE179297E2EBD2EC3F016 /* YouTubeAccount.swift in Sources */,
+				9E9775405B87B097DF009903 /* YouTubeCredentialLoadingTests.swift in Sources */,
+				32095256340CFCE09EBE04B9 /* YouTubeModel.swift in Sources */,
 				74D360A02033A6203C6D20AA /* YouTubeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,6 +340,7 @@
 			files = (
 				CB7673651A25F079644068D5 /* Preferences.swift in Sources */,
 				C8129B766698714D20236E00 /* YouTube.swift in Sources */,
+				BD34B174B220CC6C6E86D3B5 /* YouTubeKeychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +437,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) $(MAC_VIDEOS_KEYCHAIN_CONDITION)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -430,6 +449,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "$(MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Sources/MacVideos/Info.plist;
@@ -437,6 +457,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.golfergeek.mac-videos";
 				PRODUCT_NAME = "mac-videos";
 				SDKROOT = macosx;
@@ -447,6 +468,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "$(MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Sources/MacVideos/Info.plist;
@@ -454,6 +476,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MAC_VIDEOS_KEYCHAIN_ENTITLEMENTS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.golfergeek.mac-videos";
 				PRODUCT_NAME = "mac-videos";
 				SDKROOT = macosx;
@@ -574,7 +597,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG $(MAC_VIDEOS_KEYCHAIN_CONDITION)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
