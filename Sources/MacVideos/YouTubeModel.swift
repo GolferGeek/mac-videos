@@ -71,6 +71,16 @@ import MacVideosCore
             message = nil
         } catch { message = YouTubeKeychain.failure.localizedDescription }
     }
+    static func recordingDate(_ file: URL) -> Date? {
+        (try? file.resourceValues(forKeys: [.creationDateKey]))?.creationDate
+    }
+    var sortedRecordings: [URL] {
+        recent.enumerated().sorted {
+            let lhs = Self.recordingDate($0.element) ?? .distantPast
+            let rhs = Self.recordingDate($1.element) ?? .distantPast
+            return lhs == rhs ? $0.offset < $1.offset : lhs > rhs
+        }.map(\.element)
+    }
     func remember(_ url: URL) {
         guard !preview else { return }
         recent.removeAll { $0 == url }; recent.insert(url, at: 0); recent = Array(recent.prefix(8))

@@ -2,40 +2,133 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 import MacVideosCore
+import AVFoundation
 
 struct YouTubeRecordingsView: View {
     @ObservedObject var youtube: YouTubeModel
+    @State private var showAll = false
     var body: some View {
-        GroupBox("Saved recordings") {
-            VStack(alignment: .leading, spacing: 10) {
-                ForEach(youtube.recent.prefix(3), id: \.path) { file in
-                    HStack {
-                        Text(file.lastPathComponent).font(.caption).lineLimit(1).truncationMode(.middle).help(file.path)
-                        Spacer()
-                        Button(youtube.links[file.path] == nil ? "Move to YouTube" : "Open on YouTube") { youtube.open(file) }
-                    }
-                    if let video = youtube.links[file.path] {
-                        HStack {
-                            Button("Copy link") { youtube.copy(video.watchURL.absoluteString) }
-                            Button("Copy embed code") { youtube.copy(video.embedCode) }
-                        }.font(.caption)
-                    }
+        let recordings = youtube.sortedRecordings
+        GroupBox {
+            VStack(spacing: 0) {
+                if youtube.recent.isEmpty {
+                    Text("Your saved recordings will appear here.")
+                        .font(.callout).foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading).padding(12)
                 }
-                HStack {
-                    Button("Choose saved MP4…") {
-                        let panel = NSOpenPanel(); panel.allowedContentTypes = [.mpeg4Movie]; panel.allowsMultipleSelection = false
-                        if panel.runModal() == .OK, let url = panel.url { youtube.remember(url); youtube.open(url) }
-                    }
-                    Spacer()
-                    Text("Uploads a copy; keeps your MP4.").font(.caption).foregroundStyle(.secondary)
+                ForEach(Array(recordings.prefix(showAll ? recordings.count : 5)), id: \.path) { file in
+                    if file != recordings.first { Divider() }
+                    SavedRecordingRow(youtube: youtube, file: file)
                 }
-            }.padding(10)
+                if youtube.recent.count > 5 {
+                    Divider()
+                    Button(showAll ? "Show recent five" : "Show all (\(youtube.recent.count))") { showAll.toggle() }
+                        .font(.caption).buttonStyle(.plain).foregroundStyle(.tint).padding(10)
+                }
+            }
+        } label: {
+            HStack {
+                Text("Saved recordings")
+                Spacer()
+                Button("Add existing video…") {
+                    let panel = NSOpenPanel()
+                    panel.allowedContentTypes = [.mpeg4Movie]
+                    panel.allowsMultipleSelection = false
+                    if panel.runModal() == .OK, let url = panel.url { youtube.remember(url) }
+                }.font(.caption).buttonStyle(.borderless)
+            }
         }
         .sheet(item: $youtube.sheet) { sheet in
             switch sheet {
             case .setup: YouTubeSetupView(youtube: youtube)
             case .confirmation: YouTubeConfirmationView(youtube: youtube)
             }
+        }
+    }
+}
+
+private struct SavedRecordingRow: View {
+    @ObservedObject var youtube: YouTubeModel
+    let file: URL
+    @State private var duration = "Loading length…"
+    @State private var size = ""
+    @State private var thumbnail: NSImage?
+    @State private var copied: String?
+    private var video: YouTubeVideo? { youtube.links[file.path] }
+    private var title: String {
+        if let title = video?.title, !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return title }
+        if let date = YouTubeModel.recordingDate(file) {
+            return date.formatted(date: .abbreviated, time: .shortened)
+        }
+        return "Saved recording"
+    }
+    var body: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 6).fill(.quaternary)
+                if let thumbnail {
+                    Image(nsImage: thumbnail).resizable().scaledToFill()
+                } else {
+                    Image(systemName: "video").foregroundStyle(.secondary)
+                }
+            }.frame(width: 52, height: 38).clipShape(RoundedRectangle(cornerRadius: 6))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(title).font(.callout.weight(.medium)).lineLimit(2).help(file.lastPathComponent)
+                Text([duration, size].filter { !$0.isEmpty }.joined(separator: " · "))
+                    .font(.caption).foregroundStyle(.secondary)
+                if video != nil {
+                    Label("On YouTube (Unlisted)", systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 10, weight: .medium)).foregroundStyle(.green)
+                        .padding(.horizontal, 6).padding(.vertical, 3)
+                        .background(.green.opacity(0.1), in: Capsule())
+                } else {
+                    Text("Not uploaded").font(.caption).foregroundStyle(.secondary)
+                }
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .trailing, spacing: 6) {
+                Button(video == nil ? "Move to YouTube" : "Open on YouTube") { youtube.open(file) }
+                HStack(spacing: 6) {
+                    if let video {
+                        Button(copied == "link" ? "Copied" : "Copy link") { copy(video.watchURL.absoluteString, kind: "link") }
+                        Button(copied == "embed" ? "Copied" : "Copy embed") { copy(video.embedCode, kind: "embed") }
+                    }
+                    Menu {
+                        Button("Play", systemImage: "play") { NSWorkspace.shared.open(file) }
+                        Button("Show in Finder", systemImage: "folder") { NSWorkspace.shared.activateFileViewerSelecting([file]) }
+                    } label: { Image(systemName: "ellipsis") }
+                    .menuIndicator(.hidden).fixedSize().accessibilityLabel("More recording actions")
+                }
+            }.font(.caption).controlSize(.small).fixedSize()
+        }.padding(12)
+        .task(id: file) { await loadMetadata() }
+        .task(id: copied) {
+            guard copied != nil else { return }
+            try? await Task.sleep(for: .seconds(2))
+            if !Task.isCancelled { copied = nil }
+        }
+    }
+    private func copy(_ text: String, kind: String) { youtube.copy(text); copied = kind }
+    private func loadMetadata() async {
+        guard FileManager.default.fileExists(atPath: file.path) else {
+            duration = "Local file unavailable"; return
+        }
+        if let values = try? file.resourceValues(forKeys: [.fileSizeKey]), let bytes = values.fileSize {
+            size = ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file)
+        }
+        let asset = AVURLAsset(url: file)
+        if let time = try? await asset.load(.duration), time.seconds.isFinite, time.seconds > 0 {
+            let seconds = Int(time.seconds.rounded())
+            duration = seconds >= 3600
+                ? String(format: "%d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60)
+                : String(format: "%d:%02d", seconds / 60, seconds % 60)
+        } else { duration = "Length unavailable" }
+        guard !Task.isCancelled else { return }
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 160, height: 100)
+        if let frame = try? await generator.image(at: .zero), !Task.isCancelled {
+            thumbnail = NSImage(cgImage: frame.image, size: .zero)
         }
     }
 }

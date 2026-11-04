@@ -27,6 +27,24 @@ private actor MockGoogle: YouTubeTransport {
         let (size, date) = try YouTubeUploader.fingerprint(file)
         return .init(url: sessionURL, file: file, size: size, modified: date)
     }
+    func testSavedLinkTitleIsOptionalAndLinksStayIdentical() throws {
+        let old = try JSONDecoder().decode(YouTubeVideo.self, from: Data(#"{"id":"abcdefghijk"}"#.utf8))
+        let titled = try JSONDecoder().decode(YouTubeVideo.self, from: Data(#"{"id":"abcdefghijk","title":"Walkthrough"}"#.utf8))
+        XCTAssertNil(old.title)
+        XCTAssertEqual(titled.title, "Walkthrough")
+        XCTAssertEqual(old.watchURL, titled.watchURL)
+        XCTAssertEqual(old.embedCode, titled.embedCode)
+        XCTAssertEqual(try JSONDecoder().decode(YouTubeVideo.self, from: JSONEncoder().encode(titled)), titled)
+    }
+    func testUploadResponseRetainsOptionalTitle() async throws {
+        let local = try file()
+        defer { try? FileManager.default.removeItem(at: local) }
+        let response = HTTPResult(data: Data(#"{"id":"abcdefghijk","snippet":{"title":"Walkthrough"},"status":{"privacyStatus":"unlisted","embeddable":true}}"#.utf8), status: 200)
+        let transport = MockGoogle([response])
+        let result = try await YouTubeUploader(transport: transport).upload(session(local), token: "fixture-only") { _ in }
+        XCTAssertEqual(result.title, "Walkthrough")
+        XCTAssertEqual(result.watchURL.absoluteString, "https://www.youtube.com/watch?v=abcdefghijk")
+    }
     func testSetupSaveReopenAndClearUseMockStore() throws {
         let draft = GoogleClient(id: "offline-fixture.apps.googleusercontent.com", secret: "fixture-only")
         var stored: GoogleClient?
